@@ -1,34 +1,33 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-/**
- * @title AntiHackanaLedger
- * @dev A decentralized ledger to store and retrieve user balances.
- */
-contract AntiHackanaLedger {
+contract HackanaDefense {
+    uint256 public criticalData;
+    address public immutable owner; // 'immutable' saves gas since it's only set once
 
-    // 1. Declare the mapping to store balances
-    // This links a wallet address to a number (uint256)
-    mapping(address => uint256) public userBalances;
-
-    /**
-     * @dev Updates the balance for a specific user address.
-     * @param _user The address of the user.
-     * @param _newBalance The new amount to be stored.
-     */
-    function updateBalance(address _user, uint256 _newBalance) public {
-        // This line takes the 'drawer' labeled with _user's address
-        // and puts the _newBalance inside it.
-        userBalances[_user] = _newBalance; 
+    constructor() {
+        owner = msg.sender;
     }
 
-    /**
-     * @dev Retrieves the balance of a specific user.
-     * @param _user The address to look up.
-     * @return The balance associated with that address.
-     */
-    function getBalance(address _user) public view returns (uint256) {
-        // This 'view' function just reads the data without changing it.
-        return userBalances[_user];
+    // Task 1: Using require() for input validation
+    // This is the "gatekeeper" — it checks if the input is valid before running logic.
+    function updateCriticalData(uint256 _newData) public {
+        require(_newData > 0, "Data must be greater than zero."); 
+        
+        criticalData = _newData;
+
+        // Task 2: Using assert() for internal invariants
+        // We assert that the data was actually updated correctly.
+        // If this fails, there is a bug in the EVM or the contract logic itself.
+        assert(criticalData == _newData);
+    }
+
+    // Task 3: Using revert() for custom logic/Access Control
+    function restrictedUpdate(uint256 _newData) public {
+        if (msg.sender != owner) {
+            // Best for complex "if" logic or when you want to trigger custom errors
+            revert("Access denied: You are not the owner.");
+        }
+        criticalData = _newData;
     }
 }
