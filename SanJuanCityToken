@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Importing the gold standard for fungible tokens
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+
+/**
+ * @title SanJuanCityToken
+ * @notice The heartbeat of San Juan City's new economy, built on the ERC20 standard.
+ */
+contract SanJuanCityToken is ERC20 {
+
+    /**
+     * @notice Task: Initialize the community token.
+     * @dev Sets the Name to "SanJuanToken" and Symbol to "SJC".
+     */
+    constructor() ERC20("SanJuanToken", "SJC") {
+        // Minting 1,000 tokens to the deployer (Neri's command center).
+        // 10 ** decimals() ensures we account for the 18 decimal places.
+        _mint(msg.sender, 1000 * 10 ** decimals());
+    }
+    
+    /**
+     * @notice BONUS: A helper to check the "Supply Cap" easily.
+     */
+    function checkTotalSupply() public view returns (uint256) {
+        return totalSupply();
+    }
+}
