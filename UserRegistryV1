@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Task: Import the Initializable utility for upgradeable patterns
+import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+
+/**
+ * @title UserRegistryV1
+ * @notice The first version of the shield. Users can only register.
+ */
+contract UserRegistryV1 is Initializable {
+    // This storage persists even after the logic is upgraded!
+    mapping(address => string) public userNames;
+
+    /**
+     * @dev Constructors don't work with proxies. We use an 'initializer' instead.
+     */
+    function initialize() public initializer {
+        // Initial setup logic goes here
+    }
+
+    function registerUser(string memory name) public {
+        userNames[msg.sender] = name;
+    }
+
+    function getUser(address user) public view returns (string memory) {
+        return userNames[user];
+    }
+}
+
+/**
+ * @title UserRegistryV2
+ * @notice The upgraded shield. Users can now update their names to counter Hackana's identity theft.
+ */
+contract UserRegistryV2 is UserRegistryV1 {
+    /**
+     * @notice Task: Add new functionality to the existing storage.
+     * @param newName The updated name for the user.
+     */
+    function updateUser(string memory newName) public {
+        // We can access 'userNames' because we inherited from V1
+        userNames[msg.sender] = newName;
+    }
+}
