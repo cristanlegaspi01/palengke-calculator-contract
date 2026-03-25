@@ -38,7 +38,7 @@ contract PalengkeTransactions {
     }
 
     /**
-     * 🔥 BONUS: Get total amount of all payments
+     * BONUS: Get total amount of all payments
      */
     function getTotalAmount() public view returns (uint256 total) {
         for (uint256 i = 0; i < payments.length; i++) {
