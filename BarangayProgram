@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract BarangayProgram {
+
+    string public programName;
+    uint256 public startingBalance;
+    address public admin;
+
+    // Event (optional but useful for tracking)
+    event ProgramInitialized(string name, uint256 balance);
+
+    /**
+     * @notice Constructor - runs once during deployment
+     */
+    constructor(string memory _programName, uint256 _startingBalance) {
+        require(bytes(_programName).length > 0, "Program name required");
+
+        programName = _programName;
+        startingBalance = _startingBalance;
+        admin = msg.sender;
+
+        emit ProgramInitialized(_programName, _startingBalance);
+    }
+
+    /**
+     * @notice Get program details
+     */
+    function getProgramDetails()
+        public
+        view
+        returns (string memory, uint256)
+    {
+        return (programName, startingBalance);
+    }
+
+    /**
+     * 🔥 BONUS: Only admin can update balance
+     */
+    function updateBalance(uint256 _newBalance) public {
+        require(msg.sender == admin, "Only admin can update");
+
+        startingBalance = _newBalance;
+    }
+}
