@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Task: Import the ERC-721 standards and Access Control
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+/**
+ * @title DigitalArtToken
+ * @notice Protects Metro Manila's artists by providing unique, immutable proof of ownership.
+ */
+contract DigitalArtToken is ERC721URIStorage, Ownable {
+    uint256 private _tokenIds;
+
+    /**
+     * @notice Task: Initialize the NFT contract with a name and symbol.
+     * @dev Pass msg.sender to the Ownable constructor to make the deployer the owner.
+     */
+    constructor() ERC721("DigitalArtToken", "DAT") Ownable(msg.sender) {}
+
+    /**
+     * @notice Task: Mint a unique piece of art.
+     * @dev Only Neri (the contract owner) can trigger this to verify the artist first.
+     * @param recipient The address of the artist or buyer.
+     * @param tokenURI The link to the art's metadata (image, description, etc.).
+     */
+    function mintArt(address recipient, string memory tokenURI)
+        public
+        onlyOwner
+        returns (uint256)
+    {
+        // Increment the ID counter for a new unique item
+        _tokenIds++;
+        uint256 newItemId = _tokenIds;
+
+        // 1. Mint the unique ID to the recipient
+        _mint(recipient, newItemId);
+        
+        // 2. Link the unique ID to its specific metadata (The Art Link)
+        _setTokenURI(newItemId, tokenURI);
+
+        return newItemId;
+    }
+}
