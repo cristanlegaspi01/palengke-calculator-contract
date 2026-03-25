@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title DataOptimization
+ * @notice Counters Hackana's data traps by using efficient Memory and Storage management.
+ */
+contract DataOptimization {
+
+    // Storage: Persistent data saved on the blockchain (The "National Archives")
+    string public storedMessage = "Stored permanently";
+
+    /**
+     * @notice Updates the persistent state using a temporary input.
+     * @param tempMessage A 'memory' variable that exists only during this execution.
+     */
+    function updateMessage(string memory tempMessage) public {
+        // Writing from memory to storage costs gas but ensures the data lasts.
+        storedMessage = tempMessage;
+    }
+
+    /**
+     * @notice Copies a storage variable into memory to demonstrate data location.
+     * @return The message currently held in memory.
+     */
+    function compareStorageAndMemory() public view returns (string memory) {
+        // Copying from storage to memory (The "Post-it Note")
+        string memory tempMessage = storedMessage;
+        
+        return tempMessage;
+    }
+}
