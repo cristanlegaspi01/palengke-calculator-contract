@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title MathLibrary
+ * @notice A stateless utility for precise calculations, preventing Hackana's math exploits.
+ */
+library MathLibrary {
+    /**
+     * @dev Calculates a percentage of a base value.
+     * Uses internal visibility so it's embedded into the calling contract.
+     */
+    function calculatePercentage(
+        uint256 base,
+        uint256 percent
+    ) internal pure returns (uint256) {
+        // Standard percentage formula: (Amount * Rate) / 100
+        return (base * percent) / 100;
+    }
+}
+
+/**
+ * @title HackanaDefense
+ * @notice Protects San Juan City by using standardized math for transaction fees.
+ */
+contract HackanaDefense {
+    string public city = "San Juan City";
+
+    /**
+     * @notice Task: Use the MathLibrary to calculate a transaction fee.
+     * @param transactionAmount The total value of the transaction.
+     * @param feePercent The percentage to be taken as a fee.
+     * @return The calculated fee in Wei.
+     */
+    function calculateFee(
+        uint256 transactionAmount,
+        uint256 feePercent
+    ) public pure returns (uint256) {
+        // Directly calling the library's utility function
+        return MathLibrary.calculatePercentage(transactionAmount, feePercent);
+    }
+}
