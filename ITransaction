@@ -1,0 +1,54 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title ITransaction
+ * @notice The "Standard Blueprint" that defines how any payment system must behave.
+ * Interfaces only contain function signatures—no state variables or logic.
+ */
+interface ITransaction {
+    function deposit(uint256 amount) external payable;
+    function withdraw(uint256 amount) external;
+    function checkBalance() external view returns (uint256);
+}
+
+/**
+ * @title Marketplace
+ * @notice A secure, decentralized vault that implements the ITransaction interface.
+ */
+contract Marketplace is ITransaction {
+    // Private mapping to keep track of each resident's individual savings
+    mapping(address => uint256) private balances;
+
+    /**
+     * @notice Allows users to put Ether into the vault.
+     * @dev Must use 'override' because it's fulfilling the interface's promise.
+     */
+    function deposit(uint256 amount) external payable override {
+        // Security Check: Ensure the actual Ether sent matches the 'amount' typed in.
+        require(msg.value == amount, "Amount does not match sent Ether");
+
+        balances[msg.sender] += amount;
+    }
+
+    /**
+     * @notice Allows users to take their Ether back out.
+     */
+    function withdraw(uint256 amount) external override {
+        // Security Check: Prevent users (or Hackana) from withdrawing more than they own.
+        require(balances[msg.sender] >= amount, "Insufficient balance");
+
+        // Update balance BEFORE sending funds (Security Best Practice: Checks-Effects-Interactions)
+        balances[msg.sender] -= amount;
+
+        // Transfer the actual Ether to the caller
+        payable(msg.sender).transfer(amount);
+    }
+
+    /**
+     * @notice Returns the current balance of the person calling the function.
+     */
+    function checkBalance() external view override returns (uint256) {
+        return balances[msg.sender];
+    }
+}
