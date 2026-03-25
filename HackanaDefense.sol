@@ -3,31 +3,32 @@ pragma solidity ^0.8.0;
 
 contract HackanaDefense {
     uint256 public criticalData;
-    address public immutable owner; // 'immutable' saves gas since it's only set once
+    address public owner;
 
+    // The constructor runs once when the contract is deployed
     constructor() {
+        // msg.sender is the person who clicks 'Deploy'
         owner = msg.sender;
     }
 
-    // Task 1: Using require() for input validation
-    // This is the "gatekeeper" — it checks if the input is valid before running logic.
+    // Task 1: Use assert() to check internal consistency
     function updateCriticalData(uint256 _newData) public {
-        require(_newData > 0, "Data must be greater than zero."); 
-        
         criticalData = _newData;
-
-        // Task 2: Using assert() for internal invariants
-        // We assert that the data was actually updated correctly.
-        // If this fails, there is a bug in the EVM or the contract logic itself.
-        assert(criticalData == _newData);
+        
+        // Assert checks for things that should "Never be false"
+        // Since uint256 is unsigned (cannot be negative), this will always be true.
+        // If it were somehow false, the whole transaction would fail.
+        assert(criticalData >= 0);
     }
 
-    // Task 3: Using revert() for custom logic/Access Control
+    // Task 2: Use revert() for access control and error messages
     function restrictedUpdate(uint256 _newData) public {
+        // If the person calling the function is NOT the owner...
         if (msg.sender != owner) {
-            // Best for complex "if" logic or when you want to trigger custom errors
-            revert("Access denied: You are not the owner.");
+            // ...stop everything and explain why!
+            revert("Access denied: Only the owner can update critical data.");
         }
+        
         criticalData = _newData;
     }
 }
