@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Task: Import the ultimate security tools from OpenZeppelin
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+/**
+ * @title SecureDonation
+ * @notice A fortress-contract that protects community funds from Hackana's reentrancy attacks.
+ */
+contract SecureDonation is Ownable, ReentrancyGuard {
+    uint256 public totalDonations;
+    mapping(address => uint256) public donations;
+
+    // Task: Constructor to initialize ownership
+    constructor() Ownable() {}
+
+    /**
+     * @notice Allows residents to donate ETH safely.
+     * @dev Uses nonReentrant to lock the door while the function is running.
+     */
+    function donate() external payable nonReentrant {
+        // 1. CHECKS: Validate the input
+        require(msg.value > 0, "Donation must be greater than zero.");
+
+        // 2. EFFECTS: Update the state before any interaction
+        donations[msg.sender] += msg.value;
+        totalDonations += msg.value;
+    }
+
+    /**
+     * @notice Allows only Neri (the owner) to withdraw the collected funds.
+     * @dev Uses the Checks-Effects-Interactions pattern and ReentrancyGuard.
+     */
+    function withdraw() external onlyOwner nonReentrant {
+        // 1. CHECKS
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No funds to withdraw.");
+
+        // 2. EFFECTS: Reset totalDonations before the transfer (Preventing Reentrancy)
+        totalDonations = 0;
+
+        // 3. INTERACTIONS: Use .call for the most secure transfer of ETH
+        (bool success, ) = owner().call{value: balance}("");
+        require(success, "Withdrawal failed.");
+    }
+}
