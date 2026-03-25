@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title EtherReceiver
+ * @notice A secure gateway for vendors to receive payments, bypassing Hackana's malware.
+ */
+contract EtherReceiver {
+
+    // Event to provide a transparent "receipt" for every transaction
+    event PaymentReceived(address indexed from, uint256 amount);
+
+    /**
+     * @notice Task: Allows the contract to receive Ether.
+     * @dev The 'payable' keyword is the magic key that opens the door for incoming ETH.
+     */
+    function receivePayment() public payable {
+        // Validation: Ensure the sender actually sent some Ether
+        require(msg.value > 0, "You must send some Ether to pay the vendor.");
+
+        // Emit the event so the vendor can see the payment on the blockchain
+        emit PaymentReceived(msg.sender, msg.value);
+    }
+
+    /**
+     * @notice Returns the total Ether currently held in this contract's vault.
+     * @return The balance of the contract in Wei.
+     */
+    function getBalance() public view returns (uint256) {
+        // 'address(this)' refers to the contract's own identity
+        return address(this).balance;
+    }
+
+    /**
+     * @notice BONUS: A safety net to catch Ether sent without calling receivePayment.
+     */
+    receive() external payable {
+        emit PaymentReceived(msg.sender, msg.value);
+    }
+}
