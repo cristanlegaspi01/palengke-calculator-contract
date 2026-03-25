@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.4;
+
+/**
+ * @title CustomErrorExample
+ * @notice Uses gas-efficient errors to provide clear feedback during Hackana's attacks.
+ */
+contract CustomErrorExample {
+    address public owner;
+    uint256 public totalBalance;
+
+    // Task 1: Define a custom error for unauthorized access
+    error UnauthorizedAccess(address caller);
+
+    // Task 2: Define a custom error related to insufficient funds
+    error InsufficientFunds(uint256 requested, uint256 available);
+
+    constructor() {
+        owner = msg.sender;
+        totalBalance = 1000;
+    }
+
+    /**
+     * @notice Withdraws funds only if the caller is the owner and balance is sufficient.
+     * @dev Uses 'revert' with Custom Errors for maximum gas savings.
+     */
+    function withdraw(uint256 amount) public {
+        // Check for Authorization
+        if (msg.sender != owner) {
+            revert UnauthorizedAccess(msg.sender);
+        }
+
+        // Check for Sufficient Funds
+        if (amount > totalBalance) {
+            revert InsufficientFunds(amount, totalBalance);
+        }
+
+        // State update
+        totalBalance -= amount;
+    }
+
+    function checkBalance() public view returns (uint256) {
+        return totalBalance;
+    }
+}
