@@ -1,0 +1,33 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title TransactionTracker
+ * @notice Logs the caller and the timing of interactions to monitor for Hackana's moves.
+ */
+contract TransactionTracker {
+
+    // State variables to store the "footprints" of the transaction
+    address public caller;
+    uint256 public transactionTime;
+
+    /**
+     * @notice Updates the state with the details of the current transaction.
+     * @dev Uses global variables msg.sender and block.timestamp.
+     */
+    function updateTransaction() public {
+        // msg.sender: The digital signature/address of whoever called this function
+        caller = msg.sender;
+
+        // block.timestamp: The exact "Unix time" the block was mined
+        transactionTime = block.timestamp;
+    }
+
+    /**
+     * @notice BONUS: Helper function to check if the caller is a specific address.
+     * @param _address The address to compare against the last caller.
+     */
+    function isLastCaller(address _address) public view returns (bool) {
+        return (caller == _address);
+    }
+}
