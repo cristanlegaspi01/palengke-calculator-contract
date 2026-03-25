@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title BarangayWallet
+ * @notice A contract designed to handle and track unexpected funds or invalid calls.
+ */
+contract BarangayWallet {
+
+    // State variable to track total funds received
+    uint256 public totalReceived;
+
+    // Event declaration to log unexpected or invalid interactions
+    event InvalidCall(address indexed sender, uint256 value, bytes data);
+    
+    // Event to track successful direct deposits
+    event DepositReceived(address indexed sender, uint256 amount);
+
+    /**
+     * @notice Handles direct Ether transfers (e.g., via send or transfer)
+     * Triggered when msg.data is empty.
+     */
+    receive() external payable {
+        totalReceived += msg.value;
+
+        // Emit event for transparency
+        emit DepositReceived(msg.sender, msg.value);
+    }
+
+    /**
+     * @notice Handles calls to functions that do not exist or transfers with data
+     * Triggered when no other function matches the function identifier.
+     */
+    fallback() external payable {
+        // Log the details of the invalid interaction
+        emit InvalidCall(msg.sender, msg.value, msg.data);
+    }
+
+    /**
+     * @notice BONUS: View total funds received
+     */
+    function getTotalReceived() public view returns (uint256) {
+        return totalReceived;
+    }
+}
