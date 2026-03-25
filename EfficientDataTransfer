@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title EfficientDataTransfer
+ * @notice Defends against Hackana by using calldata for ultra-efficient, read-only communication.
+ */
+contract EfficientDataTransfer {
+
+    /**
+     * @notice Task 1: Accept a string input using calldata.
+     * @dev 'calldata' is immutable and the most gas-efficient for external calls.
+     * @param data The read-only message sent from outside the blockchain.
+     * @return The same string, now in memory for the return value.
+     */
+    function echoData(string calldata data) external pure returns (string memory) {
+        // We cannot modify 'data' here. We just pass it through.
+        return data;
+    }
+
+    /**
+     * @notice Task 2: Compare gas efficiency using memory.
+     * @dev 'memory' creates a copy of the input, which costs more gas than calldata.
+     * @param data The message copied into temporary memory.
+     * @return The same string.
+     */
+    function memoryData(string memory data) public pure returns (string memory) {
+        // In memory, we COULD change 'data' if we wanted to.
+        return data;
+    }
+}
