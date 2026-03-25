@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title EtherConverter
+ * @notice Precise unit conversion to prevent Hackana from siphoning small fractions of funds.
+ */
+contract EtherConverter {
+
+    /**
+     * @notice Converts an amount from Ether to Wei.
+     * @dev Multiplies by 10^18. 1 ether is a built-in keyword in Solidity.
+     * @param etherAmount The amount in ETH (e.g., 1).
+     * @return The equivalent value in Wei (1,000,000,000,000,000,000).
+     */
+    function etherToWei(uint256 etherAmount) public pure returns (uint256) {
+        return etherAmount * 1 ether;
+    }
+
+    /**
+     * @notice Converts an amount from Wei back to Ether.
+     * @dev Divides by 10^18. Note: Solidity does not support decimals, 
+     * so anything less than 1 ETH will return 0 or a rounded down integer.
+     * @param weiAmount The amount in Wei.
+     * @return The equivalent value in Ether.
+     */
+    function weiToEther(uint256 weiAmount) public pure returns (uint256) {
+        return weiAmount / 1 ether;
+    }
+
+    /**
+     * @notice BONUS: Check a specific Gwei amount (often used for gas).
+     * @param gweiAmount The amount in Gwei.
+     * @return The equivalent value in Wei.
+     */
+    function gweiToWei(uint256 gweiAmount) public pure returns (uint256) {
+        return gweiAmount * 1 gwei;
+    }
+}
