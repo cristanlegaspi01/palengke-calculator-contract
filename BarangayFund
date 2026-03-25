@@ -21,7 +21,7 @@ contract BarangayFund {
     }
 
     /**
-     * 🔥 BONUS: Withdraw funds (optional, admin-style)
+     *  BONUS: Withdraw funds (optional, admin-style)
      */
     function withdrawFunds(uint256 amount) public {
         require(amount > 0, "Invalid amount");
@@ -33,7 +33,7 @@ contract BarangayFund {
     }
 
     /**
-     * 🔥 BONUS: View total funds (kahit automatic na)
+     *  BONUS: View total funds (kahit automatic na)
      */
     function getTotalFunds() public view returns (uint256) {
         return totalFunds;
