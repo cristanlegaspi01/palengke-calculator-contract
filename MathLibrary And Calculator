@@ -1,0 +1,26 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Task: Import the local library file
+import "./MathLibrary.sol";
+
+/**
+ * @title Calculator
+ * @notice Uses imported tools to perform operations without redundant code.
+ */
+contract Calculator {
+
+    /**
+     * @notice Task: Use the library's add function.
+     */
+    function calculateSum(uint256 x, uint256 y) public pure returns (uint256) {
+        return MathLibrary.add(x, y);
+    }
+
+    /**
+     * @notice Task: Use the library's multiply function.
+     */
+    function calculateProduct(uint256 x, uint256 y) public pure returns (uint256) {
+        return MathLibrary.multiply(x, y);
+    }
+}
