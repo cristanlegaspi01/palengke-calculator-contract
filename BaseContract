@@ -1,0 +1,46 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+/**
+ * @title BaseContract
+ * @notice The "Parent" contract containing shared logic and security validations.
+ */
+contract BaseContract {
+    string public organizationName;
+
+    /**
+     * @notice Updates the organization name.
+     * @dev Task 1: Validates that the input is not an empty string.
+     * @param _name The new name for the organization.
+     */
+    function setOrganizationName(string memory _name) public {
+        // Convert string to bytes to check the length efficiently
+        require(bytes(_name).length > 0, "Name cannot be empty");
+        organizationName = _name;
+    }
+}
+
+/**
+ * @title DerivedContract
+ * @notice The "Child" contract that inherits from BaseContract and adds specific features.
+ */
+contract DerivedContract is BaseContract {
+    uint256 public fundBalance;
+
+    /**
+     * @notice Task 2: Adds a function to deposit funds into the contract.
+     * @dev Validates that the deposit amount is positive.
+     * @param amount The value to be added to the fund balance.
+     */
+    function depositFunds(uint256 amount) public {
+        require(amount > 0, "Amount must be greater than zero");
+        fundBalance += amount;
+    }
+    
+    /**
+     * @notice BONUS: A helper function to see both inherited and new data.
+     */
+    function getSummary() public view returns (string memory, uint256) {
+        return (organizationName, fundBalance);
+    }
+}
