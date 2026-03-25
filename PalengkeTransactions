@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract PalengkeTransactions {
+
+    // Dynamic array to store all payments
+    uint256[] public payments;
+
+    // Event para makita bawat transaction (optional pero useful)
+    event PaymentRecorded(uint256 amount, address sender);
+
+    /**
+     * @notice Record a payment
+     * @param _amount The payment amount
+     */
+    function recordPayment(uint256 _amount) public {
+        require(_amount > 0, "Payment must be greater than 0");
+
+        payments.push(_amount);
+
+        emit PaymentRecorded(_amount, msg.sender);
+    }
+
+    /**
+     * @notice Get total number of payments
+     */
+    function getTotalPayments() public view returns (uint256) {
+        return payments.length;
+    }
+
+    /**
+     * @notice Get specific payment by index
+     */
+    function getPayment(uint256 _index) public view returns (uint256) {
+        require(_index < payments.length, "Invalid index.");
+
+        return payments[_index];
+    }
+
+    /**
+     * 🔥 BONUS: Get total amount of all payments
+     */
+    function getTotalAmount() public view returns (uint256 total) {
+        for (uint256 i = 0; i < payments.length; i++) {
+            total += payments[i];
+        }
+    }
+}
